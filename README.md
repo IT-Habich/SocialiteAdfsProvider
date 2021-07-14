@@ -46,6 +46,17 @@ Route::get('/sso/callback', function () {
 
 For further information about this, go to the offical documentation of [Laravel Socialite](https://laravel.com/docs/8.x/socialite#routing).
 
+## Provided values
+
+This provider returns the following fields:
+
+* `email`
+* `name` (optional)
+* `nickname` (optional)
+
+Your ADFS server must return at least the `email` attribute in order to use this provider. If desired (and recommended),
+you should configure your ADFS server to provide a `nickname` (=> usually the sAMAccountName) and `name` (=> usually the displayName) attribute as well.
+
 ## License
 
 The contents of this repository is released under the [MIT license](LICENSE).
