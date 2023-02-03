@@ -57,6 +57,12 @@ This provider returns the following fields:
 Your ADFS server must return at least the `email` attribute in order to use this provider. If desired (and recommended),
 you should configure your ADFS server to provide a `nickname` (=> usually the sAMAccountName) and `name` (=> usually the displayName) attribute as well.
 
+## Feedback / Support / Security
+
+Please reach out to me at gh-security@it-habich.de for feedback or if you'll need support.
+
+If you find security-related issues, please do not use the issue tracker instead, contact me via email.
+
 ## License
 
 The contents of this repository is released under the [MIT license](LICENSE).
