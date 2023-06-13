@@ -39,7 +39,7 @@ class Provider extends AbstractProvider
 
     /**
      * Get the OpenID configuration URL of the provider.
-     * 
+     *
      * @return string
      */
     protected function getOpenIdConfigUrl()
@@ -93,7 +93,7 @@ class Provider extends AbstractProvider
             throw new \Exception("JWT signing keys could not be fetched from IDP.");
         }
 
-        return array(json_decode($response->getBody(), true), $oConfig->id_token_signing_alg_values_supported);            
+        return array(json_decode($response->getBody(), true), $oConfig->id_token_signing_alg_values_supported);
     }
 
     /**
