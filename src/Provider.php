@@ -4,6 +4,8 @@ namespace CodeAdminDe\SocialiteAdfsProvider;
 
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\User;
+use Firebase\JWT\JWT;
+use Firebase\JWT\JWK;
 
 class Provider extends AbstractProvider
 {
@@ -12,6 +14,7 @@ class Provider extends AbstractProvider
      */
     protected $authorize_endpoint = '/adfs/oauth2/authorize';
     protected $token_endpoint = '/adfs/oauth2/token';
+    protected $config_endpoint = '/adfs/.well-known/openid-configuration';
 
     /**
      * {@inheritdoc}
@@ -35,6 +38,16 @@ class Provider extends AbstractProvider
     }
 
     /**
+     * Get the OpenID configuration URL of the provider.
+     *
+     * @return string
+     */
+    protected function getOpenIdConfigUrl()
+    {
+        return $this->getAdfsServer().$this->config_endpoint;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getTokenUrl()
@@ -47,7 +60,8 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        return json_decode(base64_decode(explode('.', $token)[1]), true);
+        [$jwks, $keyAlg] = $this->getKeySetAndKeyAlg();
+        return (array) JWT::decode($token, JWK::parseKeySet($jwks), $keyAlg);
     }
 
     /**
@@ -62,5 +76,39 @@ class Provider extends AbstractProvider
             'name' => isset($user['display_name']) ? $user['display_name'] : null,
             'email' => $user['email'],
         ]);
+    }
+
+    /**
+     * Get the current JWT signing keys and the signing algorithm from provider.
+     *
+     * @return array
+     */
+    private function getKeySetAndKeyAlg()
+    {
+        $oConfig = $this->getOpenIdConfiguration();
+
+        try {
+            $response = $this->getHttpClient()->get($oConfig->jwks_uri, array('http_errors' => true));
+        } catch(\Exception $e) {
+            throw new \Exception("JWT signing keys could not be fetched from IDP.");
+        }
+
+        return array(json_decode($response->getBody(), true), $oConfig->id_token_signing_alg_values_supported);
+    }
+
+    /**
+     * Get the current OpenID configuration from provider.
+     *
+     * @return object
+     */
+    private function getOpenIdConfiguration()
+    {
+        try {
+            $response = $this->getHttpClient()->get($this->getOpenIdConfigUrl(), array('http_errors' => true));
+        } catch(\Exception $e) {
+            throw new \Exception("OpenID configuration could not be fetched from IDP.");
+        }
+
+        return json_decode($response->getBody());
     }
 }

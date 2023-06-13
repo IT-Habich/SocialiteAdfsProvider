@@ -3,7 +3,8 @@
     "description": "Basic ADFS OAuth2 Provider for Laravel Socialite",
     "type": "library",
     "require": {
-        "laravel/socialite": "^5.2"
+        "laravel/socialite": "~5.2",
+        "firebase/php-jwt": "^6.5"
     },
     "license": "MIT",
     "keywords": [
@@ -35,5 +36,5 @@
             ]
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
