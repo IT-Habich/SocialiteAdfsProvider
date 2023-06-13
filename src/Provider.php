@@ -12,6 +12,7 @@ class Provider extends AbstractProvider
      */
     protected $authorize_endpoint = '/adfs/oauth2/authorize';
     protected $token_endpoint = '/adfs/oauth2/token';
+    protected $config_endpoint = '/adfs/.well-known/openid-configuration';
 
     /**
      * {@inheritdoc}
@@ -32,6 +33,16 @@ class Provider extends AbstractProvider
     protected function getAuthUrl($state)
     {
         return $this->buildAuthUrlFromBase($this->getAdfsServer().$this->authorize_endpoint, $state);
+    }
+
+    /**
+     * Get the OpenID configuration URL of the provider.
+     * 
+     * @return string
+     */
+    protected function getOpenIdConfigUrl()
+    {
+        return $this->getAdfsServer().$this->config_endpoint;
     }
 
     /**
