@@ -60,8 +60,7 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        [$jwks, $keyAlg] = $this->getKeySetAndKeyAlg();
-        return (array) JWT::decode($token, JWK::parseKeySet($jwks), $keyAlg);
+        return (array) JWT::decode($token, JWK::parseKeySet($this->getKeySet()));
     }
 
     /**
@@ -79,11 +78,11 @@ class Provider extends AbstractProvider
     }
 
     /**
-     * Get the current JWT signing keys and the signing algorithm from provider.
+     * Get the current JWT signing keys.
      *
      * @return array
      */
-    private function getKeySetAndKeyAlg()
+    private function getKeySet()
     {
         $oConfig = $this->getOpenIdConfiguration();
 
@@ -93,7 +92,7 @@ class Provider extends AbstractProvider
             throw new \Exception("JWT signing keys could not be fetched from IDP.");
         }
 
-        return array(json_decode($response->getBody(), true), $oConfig->id_token_signing_alg_values_supported);
+        return json_decode($response->getBody(), true);
     }
 
     /**
