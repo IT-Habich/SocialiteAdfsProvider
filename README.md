@@ -1,5 +1,7 @@
 # Laravel Socialite Adfs Provider
 
+> THIS REPO HAS BEEN ARCHIVED. No further development will take place. Use at your own risk, as no security updates or functional adjustments will be made. I highly recommend switching to an official available provider and the use of Azure Active Directory / Entra ID. 
+
 Basic ADFS OAuth2 Provider for [Laravel Socialite](https://laravel.com/docs/8.x/socialite)
 
 
